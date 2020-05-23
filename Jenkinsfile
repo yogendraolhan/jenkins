@@ -1,16 +1,18 @@
 pipeline {
     agent any
-    environment { 
-        CC = 'clang'
-    }
     stages {
-        stage('Example') {
-environment { 
-                DEBUG_FLAGS = '-g'
-            }
+        stage('Test') {
             steps {
-                sh 'printenv'
+                sh 'make check'
             }
+        }
+    }
+    post {
+        always {
+            junit '**/target/*.xml'
+        }
+        failure {
+            mail to: team@example.com, subject: 'The Pipeline failed :('
         }
     }
 }
